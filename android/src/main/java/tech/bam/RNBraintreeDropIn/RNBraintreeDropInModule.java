@@ -83,7 +83,7 @@ public class RNBraintreeDropInModule extends ReactContextBaseJavaModule {
 
       ThreeDSecureRequest threeDSecureRequest = new ThreeDSecureRequest()
         .amount(String.valueOf(threeDSecureOptions.getDouble("amount")))
-        .versionRequested(ThreeDSecureRequest.VERSION_2)
+        .versionRequested(ThreeDSecureRequest.VERSION_2);
         // .email("test@email.com")
         // .billingAddress(address);
         // .additionalInformation(additionalInformation);
