@@ -17,6 +17,9 @@ import com.braintreepayments.api.dropin.DropInResult;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.braintreepayments.api.models.CardNonce;
 import com.braintreepayments.api.models.ThreeDSecureInfo;
+import com.braintreepayments.api.models.ThreeDSecureRequest;
+// import com.braintreepayments.api.models.ThreeDSecurePostalAddress;
+// import com.braintreepayments.api.models.ThreeDSecureAdditionalInformation
 
 public class RNBraintreeDropInModule extends ReactContextBaseJavaModule {
 
@@ -24,6 +27,7 @@ public class RNBraintreeDropInModule extends ReactContextBaseJavaModule {
   private static final int DROP_IN_REQUEST = 0x444;
 
   private boolean isVerifyingThreeDSecure = false;
+  private boolean isDisablePayPal = true;
 
   public RNBraintreeDropInModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -46,6 +50,12 @@ public class RNBraintreeDropInModule extends ReactContextBaseJavaModule {
     }
 
     DropInRequest dropInRequest = new DropInRequest().clientToken(options.getString("clientToken"));
+    if (options.hasKey("disablePayPal")) {
+      isDisablePayPal = options.getBoolean("disablePayPal");
+    }
+    if (isDisablePayPal) {
+      dropInRequest.disablePayPal();
+    }
 
     if (options.hasKey("threeDSecure")) {
       final ReadableMap threeDSecureOptions = options.getMap("threeDSecure");
@@ -56,9 +66,31 @@ public class RNBraintreeDropInModule extends ReactContextBaseJavaModule {
 
       isVerifyingThreeDSecure = true;
 
+      // ThreeDSecurePostalAddress address = new ThreeDSecurePostalAddress()
+      //   .givenName("Jill") // ASCII-printable characters required, else will throw a validation error
+      //   .surname("Doe") // ASCII-printable characters required, else will throw a validation error
+      //   .phoneNumber("5551234567")
+      //   .streetAddress("555 Smith St")
+      //   .extendedAddress("#2")
+      //   .locality("Chicago")
+      //   .region("IL")
+      //   .postalCode("12345")
+      //   .countryCodeAlpha2("US");
+
+      // For best results, provide as many additional elements as possible.
+      // ThreeDSecureAdditionalInformation additionalInformation = new ThreeDSecureAdditionalInformation()
+      //   .shippingAddress(address);
+
+      ThreeDSecureRequest threeDSecureRequest = new ThreeDSecureRequest()
+        .amount(String.valueOf(threeDSecureOptions.getDouble("amount")))
+        .versionRequested(ThreeDSecureRequest.VERSION_2)
+        // .email("test@email.com")
+        // .billingAddress(address);
+        // .additionalInformation(additionalInformation);
+
       dropInRequest
-      .amount(String.valueOf(threeDSecureOptions.getDouble("amount")))
-      .requestThreeDSecureVerification(true);
+        .requestThreeDSecureVerification(true)
+        .threeDSecureRequest(threeDSecureRequest);
     }
 
     mPromise = promise;

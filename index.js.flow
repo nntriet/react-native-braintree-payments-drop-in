@@ -1,5 +1,6 @@
 type ShowOptions = {|
   clientToken: string,
+  disablePayPal: boolean,
   threeDSecure?: {|
     amount: number,
   |},
