@@ -7,6 +7,7 @@
 #import "BraintreeCore.h"
 #import "BraintreeDropIn.h"
 #import "BTCardNonce.h"
+#import "BTThreeDSecureRequest.h"
 
 @interface RNBraintreeDropIn : NSObject <RCTBridgeModule>
 
